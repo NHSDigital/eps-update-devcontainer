@@ -36,11 +36,12 @@ on:
     - cron: '0 6 * * 1'
 
 jobs:
-  sync-copilot-instructions:
+  update-devcontainer-version:
     runs-on: ubuntu-22.04
     environment: create_pull_request
     permissions:
       contents: read
+      packages: read
 
     steps:
       - name: Update devcontainer version
