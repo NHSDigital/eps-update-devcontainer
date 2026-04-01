@@ -45,17 +45,12 @@ runs:
       run: |
         set -euo pipefail
 
-
         PACKAGE_NAME="eps-devcontainers/${DEVCONTAINER_IMAGE}"
-
         ENCODED_PACKAGE_NAME=$(python3 -c 'import sys, urllib.parse;
         print(urllib.parse.quote(sys.argv[1], safe=""))' "$PACKAGE_NAME")
-
-
         VERSIONS_JSON=$(gh api \
           -H "Accept: application/vnd.github+json" \
           "/orgs/NHSDigital/packages/container/${ENCODED_PACKAGE_NAME}/versions?per_page=100")
-
         LATEST_VIA_LATEST_TAG=$(jq -r '
           [ .[]
             | select((.metadata.container.tags // []) | index("latest"))
@@ -67,7 +62,6 @@ runs:
           | .[0] // empty
         ' <<< "$VERSIONS_JSON")
 
-
         LATEST_V_TAG=$(jq -r '
           [ .[]
             | {created_at, tags: (.metadata.container.tags // [])}
@@ -78,22 +72,18 @@ runs:
           | .[0] // empty
         ' <<< "$VERSIONS_JSON")
 
-
         RESOLVED_VERSION="$LATEST_VIA_LATEST_TAG"
 
         if [[ -z "$RESOLVED_VERSION" ]]; then
           RESOLVED_VERSION="$LATEST_V_TAG"
         fi
 
-
         if [[ -z "$RESOLVED_VERSION" ]]; then
           echo "No version tag matching ^v found for package ${PACKAGE_NAME}" >&2
           exit 1
         fi
 
-
         echo "Resolved latest version: ${RESOLVED_VERSION}"
-
         echo "latest_version=${RESOLVED_VERSION}" >> "$GITHUB_OUTPUT"
 
     - name: Update devcontainer version in config
@@ -101,37 +91,26 @@ runs:
       run: |
         set -euo pipefail
 
-
-        TARGET_VERSION='${{ steps.resolve-version.outputs.latest_version }}'
-
-        if [[ "$TARGET_VERSION" == "$DEVCONTAINER_VERSION" ]]; then
+        if [[ "$LATEST_DEVCONTAINER_VERSION" == "$DEVCONTAINER_VERSION" ]]; then
           echo "IMAGE_VERSION is already up to date (${DEVCONTAINER_VERSION})"
           exit 0
         fi
 
-
         python3 - <<'PY'
-
         import json
-
+        import os
         from pathlib import Path
-
-
         config_file = Path('.devcontainer/devcontainer.json')
-
         config = json.loads(config_file.read_text())
-
-        config['build']['args']['IMAGE_VERSION'] = '${{
-        steps.resolve-version.outputs.latest_version }}'
-
+        config['build']['args']['IMAGE_VERSION'] = os.environ['LATEST_DEVCONTAINER_VERSION']
         config_file.write_text(json.dumps(config, indent=2) + '\n')
-
         PY
-
 
         echo "Updated IMAGE_VERSION from ${DEVCONTAINER_VERSION} to ${LATEST_DEVCONTAINER_VERSION}"
       env:
         LATEST_DEVCONTAINER_VERSION: "${{ steps.resolve-version.outputs.latest_version }}"
+        DEVCONTAINER_VERSION: "${{ steps.load-config.outputs.DEVCONTAINER_VERSION }}"
+
     - name: Create GitHub App Token
       uses: actions/create-github-app-token@f8d387b68d61c58ab83c6c016672934102569859
       id: generate-token
