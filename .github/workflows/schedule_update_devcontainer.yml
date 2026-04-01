@@ -7,11 +7,12 @@ on:
 
 permissions: {}
 jobs:
-    sync-copilot-instructions:
+    update-devcontainer-version:
         runs-on: ubuntu-22.04
         environment: create_pull_request
         permissions:
             contents: read
+            packages: read
 
         steps:
             - name: Checkout local repository
