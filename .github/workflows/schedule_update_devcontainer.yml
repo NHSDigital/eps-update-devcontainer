@@ -21,7 +21,7 @@ jobs:
                   fetch-depth: 0
                   persist-credentials: false
             - name: Update devcontainer version
-              uses: ./action.yml
+              uses: ./
               with:
                   calling_repo_base_branch: main
                   CREATE_PULL_REQUEST_APP_ID: ${{ secrets.CREATE_PULL_REQUEST_APP_ID }}
