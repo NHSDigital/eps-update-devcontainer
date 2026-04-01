@@ -35,6 +35,8 @@ on:
   schedule:
     - cron: '0 6 * * 1'
 
+permissions: {}
+
 jobs:
   update-devcontainer-version:
     runs-on: ubuntu-22.04
