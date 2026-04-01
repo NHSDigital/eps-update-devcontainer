@@ -46,8 +46,7 @@ runs:
         set -euo pipefail
 
         PACKAGE_NAME="eps-devcontainers/${DEVCONTAINER_IMAGE}"
-        ENCODED_PACKAGE_NAME=$(python3 -c 'import sys, urllib.parse;
-        print(urllib.parse.quote(sys.argv[1], safe=""))' "$PACKAGE_NAME")
+        ENCODED_PACKAGE_NAME=$(python3 -c 'import sys, urllib.parse; print(urllib.parse.quote(sys.argv[1], safe=""))' "$PACKAGE_NAME")
         VERSIONS_JSON=$(gh api \
           -H "Accept: application/vnd.github+json" \
           "/orgs/NHSDigital/packages/container/${ENCODED_PACKAGE_NAME}/versions?per_page=100")
