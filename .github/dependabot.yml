@@ -38,20 +38,3 @@ updates:
     versioning-strategy: increase
     cooldown:
       default-days: 7
-  ###################################
-  # NPM workspace  ##################
-  ###################################
-  - package-ecosystem: "npm"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-      day: "friday"
-      time: "22:00" # UTC
-    open-pull-requests-limit: 20
-    versioning-strategy: increase
-    commit-message:
-      prefix: "Upgrade: [dependabot] - "
-    registries:
-      - npm-github
-    cooldown:
-      default-days: 7
