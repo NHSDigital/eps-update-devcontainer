@@ -1,0 +1,37 @@
+name: ci
+
+on:
+    push:
+        branches: [main]
+permissions: {}
+jobs:
+    get_config_values:
+        uses: NHSDigital/eps-common-workflows/.github/workflows/get-repo-config.yml@68c2dea999875055ecbfdf055d8391e6e8b8ce2f
+        permissions:
+            attestations: "read"
+            contents: "read"
+            packages: "read"
+        with:
+            verify_published_from_main_image: false
+
+    quality_checks:
+        uses: NHSDigital/eps-common-workflows/.github/workflows/quality-checks-devcontainer.yml@68c2dea999875055ecbfdf055d8391e6e8b8ce2f
+        needs: [get_config_values]
+        permissions:
+            contents: "read"
+        with:
+            pinned_image: ${{ needs.get_config_values.outputs.pinned_image }}
+        secrets:
+            SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+
+    tag_release:
+        needs: [get_config_values]
+        uses: NHSDigital/eps-common-workflows/.github/workflows/tag-release-devcontainer.yml@68c2dea999875055ecbfdf055d8391e6e8b8ce2f
+        permissions:
+            id-token: "write"
+            contents: "write"
+        with:
+            dry_run: true
+            pinned_image: ${{ needs.get_config_values.outputs.pinned_image }}
+            branch_name: main
+            tag_format: ${{ needs.get_config_values.outputs.tag_format }}
