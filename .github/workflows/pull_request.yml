@@ -40,7 +40,7 @@ jobs:
 
     tag_release:
         needs: [get_config_values]
-        uses: NHSDigital/eps-common-workflows/.github/workflows/tag-release-devcontainer.yml@68c2dea999875055ecbfdf055d8391e6e8b8ce2f
+        uses: NHSDigital/eps-common-workflows/.github/workflows/tag-release-devcontainer.yml@e798d5aee897de6f7dc387dd5623fcd9ba4c8929
         permissions:
             id-token: "write"
             contents: "write"
