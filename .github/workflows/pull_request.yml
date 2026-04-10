@@ -15,7 +15,7 @@ jobs:
             verify_published_from_main_image: false
 
     dependabot-auto-approve-and-merge:
-        uses: NHSDigital/eps-common-workflows/.github/workflows/dependabot-auto-approve-and-merge.yml@68c2dea999875055ecbfdf055d8391e6e8b8ce2f
+        uses: NHSDigital/eps-common-workflows/.github/workflows/dependabot-auto-approve-and-merge.yml@e798d5aee897de6f7dc387dd5623fcd9ba4c8929
         permissions:
             contents: "write"
             pull-requests: "write"
