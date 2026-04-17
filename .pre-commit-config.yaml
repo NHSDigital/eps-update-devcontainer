@@ -23,6 +23,14 @@ repos:
 
   - repo: local
     hooks:
+      - id: grype-scan-local
+        name: Grype scan local changes
+        entry: make
+        args: ["grype-scan-local"]
+        language: system
+        pass_filenames: false
+        always_run: true
+
       - id: zizmor-action
         name: Check action.yml
         entry: zizmor
@@ -78,10 +86,9 @@ repos:
         pass_filenames: false
         always_run: true
 
-      - id: gitleasks
+      - id: gitleaks
         name: Git Leaks
-        description: gitleaks scans commits, commit messages, and --no-ff merges to
-          prevent adding secrets into your git repositories.
+        description: gitleaks scans commits, commit messages, and --no-ff merges to prevent adding secrets into your git repositories.
         entry: bash
         args:
           - -c
